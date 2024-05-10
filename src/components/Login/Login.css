@@ -1,0 +1,14 @@
+.log-in {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.log-in__container {
+  display: flex;
+  justify-content: center;
+  width: 35%;
+  background-color: #ffffff;
+}

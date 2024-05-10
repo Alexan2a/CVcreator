@@ -1,0 +1,78 @@
+.slider {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  width: 70%;
+  height: 100vh;
+  background-color: #786345;
+}
+
+.slide {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  font-size: 52px;
+  font-weight: bold;
+  font-family: "Montserrat", sans-serif;
+  color: #ffffff;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.slide.active {
+  z-index: 1;
+  opacity: 1;
+}
+
+.overlay {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(120, 99, 69, 0.6);
+}
+
+.overlay-slider {
+  padding: 32px;
+  align-items: center;
+}
+
+.logo-container {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 2;
+  width: 100px;
+  height: 100px;
+  background-color: black;
+}
+
+.circles {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  height: 100vh;
+  padding-bottom: 32px;
+}
+
+.circle {
+  z-index: 2;
+  width: 16px;
+  height: 16px;
+  margin: 16px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  opacity: 0.5;
+  transition: opacity 1s ease-in-out;
+  cursor: pointer;
+}
+
+.circle.active {
+  opacity: 1;
+}
