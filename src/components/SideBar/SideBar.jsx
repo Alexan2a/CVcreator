@@ -1,14 +1,15 @@
 import "./SideBar.css";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { UserContext } from "../UserContextProvider";
+import { useDispatch } from "react-redux";
 
 function SideBar() {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useContext(UserContext);
-  const userContext = useContext(UserContext);
+
+  const dispatchRedux = useDispatch();
 
   useEffect(() => {
-    console.log(isOpen + " useEffect");
     if (!isOpen) {
       let optionText = document.querySelectorAll(".side-bar__option-text");
       optionText.forEach((text) => {
@@ -59,13 +60,15 @@ function SideBar() {
         text: "Log out",
         imgURL: "./src-img/logout.png",
         action: () => {
-          userContext.onChange(null);
+          dispatchRedux({ type: "DELETE_USERNAME" });
+          //localStorage.removeItem("token");
           localStorage.removeItem("username");
         },
       },
     ],
-    [userContext]
+    [dispatchRedux]
   );
+
   return (
     <div className="side-bar">
       <div className="side-bar__menu">

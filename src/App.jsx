@@ -1,12 +1,10 @@
 import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-//import Login from './components/Login';
-//import Registration from './components/Registration';
-import Main from "./components/Main/Main";
-import LogIn from "./components/Login/Login";
+import Main from "./pages/Main/Main";
+import LogIn from "./pages/Login/Login";
 import UserContextProvider from "./components/UserContextProvider";
-import Registration from "./components/Registration/Registration";
-//import Redactor from './components/Redactor';
+import Registration from "./pages/Registration/Registration";
+import Redactor from "./pages/Redactor/Redactor";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Registration />,
+  },
+  {
+    path: "/main/redactor",
+    element: <Redactor />,
   },
 ]);
 

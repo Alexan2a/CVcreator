@@ -1,99 +1,137 @@
 import "./LoginForm.css";
-import { useCallback, useEffect, useState } from "react";
-import useInputValue from "../../hooks/use-input-value";
+import { useEffect, useMemo, useReducer } from "react";
 import { PASSWORD_LENGTH, PASSWORD_VALID_SYMB } from "../../constants/form";
 import { Link } from "react-router-dom";
 
+const initialState = {
+  username: "",
+  password: "",
+  hasUsernameChanged: false,
+  hasPasswordChanged: false,
+  passwordState: "",
+  usernameState: "",
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "SET_USERNAME":
+      return { ...state, username: action.payload };
+    case "CHECK_USERNAME":
+      if (
+        (state.username.trim() === "" ||
+          !PASSWORD_VALID_SYMB.test(state.username)) &&
+        state.hasUsernameChanged
+      )
+        return !state.usernameState
+          ? {
+              ...state,
+              usernameState: true,
+            }
+          : state;
+      else
+        return state.usernameState
+          ? {
+              ...state,
+              usernameState: false,
+            }
+          : state;
+    case "SET_PASSWORD":
+      return { ...state, password: action.payload };
+    case "CHECK_PASSWORD":
+      if (state.password.length < PASSWORD_LENGTH && state.hasPasswordChanged)
+        return !state.passwordState
+          ? {
+              ...state,
+              passwordState: true,
+            }
+          : state;
+      else
+        return state.passwordState
+          ? {
+              ...state,
+              passwordState: false,
+            }
+          : state;
+    case "LOGIN_FAIL":
+      return {
+        ...state,
+        username: "",
+        password: "",
+        hasUsernameChanged: false,
+        hasPasswordChanged: false,
+      };
+    case "SET_HAS_USERNAME_CHANGED":
+      return { ...state, hasUsernameChanged: true };
+    case "SET_HAS_PASSWORD_CHANGED":
+      return { ...state, hasPasswordChanged: true };
+    default:
+      throw new Error();
+  }
+}
+
 function LogInForm({ loginError, onSetLoginError, onLogIn }) {
-  const [username, setUsername, handleSetUsername] = useInputValue("");
-  const [password, setPassword, handleSetPassword] = useInputValue("");
-  const [usernameError, setUsernameError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [hasUsernameChanged, setHasUsernameChanged] = useState(false);
-  const [hasPasswordChanged, setHasPasswordChanged] = useState(false);
-  const [passwordState, setPasswordState] = useState("");
-  const [usernameState, setUsernameState] = useState("");
+  const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
     if (loginError) {
-      // Если вход не удался, очистите поля ввода
-      setUsername("");
-      setPassword("");
-      setHasUsernameChanged(false);
-      setHasPasswordChanged(false);
-      setPasswordError("incorrect login or password");
-      let inputFields = document.querySelectorAll(".log-in-form__input-field");
+      let inputFields = document.querySelectorAll(".input-field");
       inputFields.forEach((field) => {
         field.style.borderColor = "red";
       });
+      dispatch({ type: "LOGIN_FAIL" });
       onSetLoginError(false);
     }
-    // onSetLoginError(false);
-  }, [loginError, onSetLoginError, setPassword, setUsername]);
-
-  const handleCheckPassword = useCallback(() => {
-    if (password.length >= PASSWORD_LENGTH && passwordState) {
-      setPasswordError("");
-      setPasswordState(false);
-    }
-    if (
-      password.length < PASSWORD_LENGTH &&
-      !passwordState &&
-      hasPasswordChanged
-    ) {
-      console.log("password state changet to false");
-      setPasswordError("Your password has incorrect length");
-      setPasswordState(true);
-    }
-  }, [password, passwordState, hasPasswordChanged]);
-
-  const handleCheckUsername = useCallback(() => {
-    let regexp = PASSWORD_VALID_SYMB;
-
-    if (
-      (username.trim() === "" || !regexp.test(username)) &&
-      hasUsernameChanged
-    ) {
-      setUsernameError("Your name has incorrect form");
-      setUsernameState(true);
-    } else {
-      setUsernameError("");
-      setUsernameState(false);
-    }
-  }, [username, hasUsernameChanged]);
+  }, [loginError, onSetLoginError]);
 
   useEffect(() => {
-    if (!hasPasswordChanged && password !== "") {
-      let inputFields = document.querySelectorAll(".log-in-form__input-field");
+    if (!state.hasUsernameChanged && state.username !== "") {
+      let inputFields = document.querySelectorAll(".input-field");
       inputFields.forEach((field) => {
         field.style.borderColor = "#d4d3d2";
       });
-      setPasswordError("");
-      setHasPasswordChanged(true);
+      dispatch({ type: "SET_HAS_USERNAME_CHANGED" });
     }
-    handleCheckPassword();
-  }, [password, hasPasswordChanged, handleCheckPassword]);
+    dispatch({ type: "CHECK_USERNAME" });
+  }, [state.username, state.hasUsernameChanged]);
 
   useEffect(() => {
-    if (!hasUsernameChanged && username !== "") {
-      let inputFields = document.querySelectorAll(".log-in-form__input-field");
+    if (!state.hasPasswordChanged && state.password !== "") {
+      let inputFields = document.querySelectorAll(".input-field");
       inputFields.forEach((field) => {
         field.style.borderColor = "#d4d3d2";
       });
-      setPasswordError("");
-      setHasUsernameChanged(true);
+      dispatch({ type: "SET_HAS_PASSWORD_CHANGED" });
     }
-    handleCheckUsername();
-  }, [username, hasUsernameChanged, handleCheckUsername]);
+
+    dispatch({ type: "CHECK_PASSWORD" });
+  }, [state.password, state.hasPasswordChanged]);
+
+  const handleSetUsername = (e) => {
+    dispatch({ type: "SET_USERNAME", payload: e.target.value });
+  };
+
+  const handleSetPassword = (e) => {
+    dispatch({ type: "SET_PASSWORD", payload: e.target.value });
+  };
+
+  const passwordError = useMemo(() => {
+    if (loginError) return "Incorrect login or password";
+    else return state.passwordState ? "Your password has incorrect length" : "";
+  }, [state.passwordState, loginError]);
+
+  const usernameError = useMemo(
+    () => (state.usernameState ? "Your login has incorrect form" : ""),
+    [state.usernameState]
+  );
 
   const handleLogIn = () => {
     if (
-      !passwordState &&
-      !usernameState &&
-      hasPasswordChanged &&
-      hasUsernameChanged
+      !state.passwordState &&
+      !state.usernameState &&
+      state.hasPasswordChanged &&
+      state.hasUsernameChanged
     )
-      onLogIn(username, password);
+      onLogIn(state.username, state.password);
   };
 
   return (
@@ -103,7 +141,7 @@ function LogInForm({ loginError, onSetLoginError, onLogIn }) {
         type="text"
         className="input-field"
         placeholder="Login"
-        value={username}
+        value={state.username}
         onChange={handleSetUsername}
       />
       <label className="text text-type-error">{usernameError}</label>
@@ -111,7 +149,7 @@ function LogInForm({ loginError, onSetLoginError, onLogIn }) {
         type="password"
         className="input-field"
         placeholder="Password"
-        value={password}
+        value={state.password}
         onChange={handleSetPassword}
       />
       <label className="text text-type-error">{passwordError}</label>
