@@ -4,8 +4,8 @@ import "./Sort.css";
 export default function Sort({ activeSort, onSetActiveSort }) {
   const SORT = useMemo(() => {
     return {
-      Old: (a, b) => a.date - b.date,
-      New: (a, b) => b.date - a.date,
+      Old: (a, b) => Date.parse(a.date) - Date.parse(b.date),
+      New: (a, b) => Date.parse(b.date) - Date.parse(a.date),
     };
   }, []);
 

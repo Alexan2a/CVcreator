@@ -15,7 +15,7 @@ function Main() {
   const [activeSort, setActiveSort] = useState(() => (a, b) => b.date - a.date);
   const handleSetActiveSort = useCallback((value) => setActiveSort(value), []);
 
-  const stateRedux = useSelector((store) => store);
+  const username = useSelector((store) => store.username);
 
   useEffect(() => {
     setOpacity(1);
@@ -38,7 +38,7 @@ function Main() {
     return () => clearTimeout(id);
   }, [name]);
 
-  if (!stateRedux.username) {
+  if (!username) {
     return <Navigate to="/" />;
   }
 
@@ -46,10 +46,10 @@ function Main() {
     <div className="main">
       <div className="welcome" style={{ opacity: opacity }}>
         <div className="welcome__text">
-          <h1>Welcome, {stateRedux.username} !</h1>
+          <h1>Welcome, {username} !</h1>
         </div>
       </div>
-      <SideBar />
+      <SideBar username={username} />
       <div className="main-item">
         <div className="header">
           <div className="overlay">

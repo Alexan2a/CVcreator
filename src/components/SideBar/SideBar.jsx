@@ -1,12 +1,9 @@
 import "./SideBar.css";
-import React, { useContext, useEffect, useMemo, useState } from "react";
-import { UserContext } from "../UserContextProvider";
+import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch } from "react-redux";
 
-function SideBar() {
+function SideBar({ username }) {
   const [isOpen, setIsOpen] = useState(false);
-  const { user } = useContext(UserContext);
-
   const dispatchRedux = useDispatch();
 
   useEffect(() => {
@@ -93,10 +90,10 @@ function SideBar() {
           <img
             className="side-bar__user-image"
             src="./img/img1.jpg"
-            alt={user}
+            alt={username}
           />
           <div className="side-bar__option-text side-bar__user-text">
-            {user}
+            {username}
           </div>
         </div>
       </div>

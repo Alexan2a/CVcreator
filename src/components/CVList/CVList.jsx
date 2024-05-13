@@ -8,13 +8,23 @@ function CVList({ name, activeSort }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    setItems(generateCVs(12));
-    setIsLoading(false);
-    // setIsLoading(true);
-    // // setTimeout(() => {
-    // //   setItems(generateCVs(12));
-    // //   setIsLoading(false);
-    // // }, 500);
+    setIsLoading(true);
+    fetch("http://localhost:8080/testproject_war_exploded/api/controller", {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Command: "LOAD_RESUMES",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setItems(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Ошибка:", error);
+        setIsLoading(false);
+      });
   }, []);
 
   const searchItems = useMemo(() => {

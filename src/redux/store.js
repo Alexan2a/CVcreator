@@ -18,7 +18,7 @@ function reducer(state = initialState, action) {
 const store = createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__?.());
 
 store.subscribe(() => {
-  localStorage.setItem("username", JSON.stringify(store.getState()));
+  localStorage.setItem("username", store.getState().username);
 });
 
 export default store;

@@ -2,7 +2,6 @@ import React from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Main from "./pages/Main/Main";
 import LogIn from "./pages/Login/Login";
-import UserContextProvider from "./components/UserContextProvider";
 import Registration from "./pages/Registration/Registration";
 import Redactor from "./pages/Redactor/Redactor";
 
@@ -26,11 +25,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return (
-    <UserContextProvider>
-      <RouterProvider router={router} />
-    </UserContextProvider>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

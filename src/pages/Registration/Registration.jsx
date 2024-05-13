@@ -99,7 +99,7 @@ function reducer(state = initialState, action) {
     case "SET_HAS_REPEAT_PASSWORD_CHANGED":
       return { ...state, hasRepeatPasswordChanged: true };
     default:
-      return state;
+      throw new Error();
   }
 }
 

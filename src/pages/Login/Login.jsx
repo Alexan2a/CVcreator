@@ -2,13 +2,13 @@ import "./Login.css";
 import { Navigate, useNavigate } from "react-router-dom";
 import LogInForm from "../../components/LoginForm/LoginForm";
 import Slider from "../../components/Slider/Slider";
-import { useCallback, useContext, useState } from "react";
-import { UserContext } from "../../components/UserContextProvider";
-import { useDispatch } from "react-redux";
+import { useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 function LogIn() {
   const navigate = useNavigate();
-  const { user } = useContext(UserContext);
+  // const { user } = useContext(UserContext);
+  const username = useSelector((store) => store.username);
   const dispatchRedux = useDispatch();
   const [loginError, setLoginError] = useState(false);
 
@@ -58,7 +58,7 @@ function LogIn() {
       });
   };
 
-  if (user) {
+  if (username) {
     return <Navigate to="/main" />;
   }
   return (
