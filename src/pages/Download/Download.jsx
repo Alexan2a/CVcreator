@@ -14,6 +14,9 @@ const initialState = {
   phone: "",
   adress: "",
   about: "",
+  educations: [],
+  experiences: [],
+  skills: [],
 };
 
 function reducer(state = initialState, action) {
@@ -73,100 +76,58 @@ function Redactor({ isNew }) {
     }
   };
 
-  const handleAddEducation = () => {
-    const educ = {
-      id: +Date.now() + educations.length,
-      degree: "",
-      name: "",
-      city: "",
-      startYear: "",
-      endYear: "",
-    };
-    setEducations((currentEducation) => currentEducation.concat(educ));
-  };
-
-  const handleAddExperience = () => {
-    const exp = {
-      id: +Date.now() + educations.length,
-      position: "",
-      company: "",
-      city: "",
-      startDate: "",
-      endDate: "",
-    };
-    setExperiences((currentExperience) => currentExperience.concat(exp));
-  };
-
-  const handleAddSkill = () => {
-    const skill = {
-      id: +Date.now() + educations.length,
-      name: "",
-      level: 50,
-    };
-    setSkills((currentSkills) => currentSkills.concat(skill));
-  };
-
   return (
     <div className="redactor">
-      <div className="overlay overlay-side-left">
-        <div className="redactor-fields">
-          <PersonalData
-            name={state.name}
-            surname={state.surname}
-            email={state.email}
-            title={state.title}
-            phone={state.phone}
-            adress={state.adress}
-            onSetValue={dispatch}
-          />
-          <EducationList
-            educations={educations}
-            onSetEducations={setEducations}
-          />
-          <div className="redactor-fields__item">
-            <div className="redactor-fields__item-title">Education</div>
-            <div className="button-container button-container-size-s">
-              <button
-                className="button button-form-round"
-                onClick={handleAddEducation}
-              >
-                +
-              </button>
-            </div>
+      <div className="redactor-fields">
+        <div className="row1">
+          <div className="row1-elem1">
+            <div className="row1-elem1-name"></div>
+            <div className="row1-elem1-title"></div>
           </div>
-          <ExperienceList
-            experiences={experiences}
-            onSetExperiences={setExperiences}
-          />
-          <div className="redactor-fields__item">
-            <div className="redactor-fields__item-title">Experience</div>
-            <div className="button-container button-container-size-s">
-              <button
-                className="button button-form-round"
-                onClick={handleAddExperience}
-              >
-                +
-              </button>
-            </div>
+          <div className="row1-elem2"></div>
+        </div>
+        <div className="row2">
+          <div className="row2-elem1">
+            <div className="row2-elem1-adress"></div>
+            <div className="row2-elem1-phone"></div>
+            <div className="row2-elem1-email"></div>
           </div>
-          <SkillList skills={skills} onSetSkills={setSkills} />
-          <div className="redactor-fields__item">
-            <div className="redactor-fields__item-title">Skill</div>
-            <div className="button-container button-container-size-s">
-              <button
-                className="button button-form-round"
-                onClick={handleAddSkill}
-              >
-                +
-              </button>
-            </div>
+          <div className="row2-elem2"></div>
+        </div>
+        <div className="row3">
+          <div className="row3-elem1">
+            <div className="row2-elem2-skills"></div>
+            <div className="row2-elem2-education"></div>
           </div>
-          <div className="button-container button-container-size-l">
-            <button className="button button-size-l" onClick={handleSaveCV}>
-              Save
+          <div className="row2-elem2"></div>
+        </div>
+        {/* <PersonalData
+          name={state.name}
+          surname={state.surname}
+          email={state.email}
+          title={state.title}
+          phone={state.phone}
+          adress={state.adress}
+        />
+        <EducationList educations={educations} />
+        <ExperienceList experiences={experiences} />
+        <SkillList skills={skills} /> */}
+        {/* <div className="redactor-fields__item">
+          <div className="redactor-fields__item-title">Skill</div>
+          <div className="button-container button-container-size-s">
+            <button
+              className="button button-form-round"
+              onClick={handleAddSkill}
+            >
+              +
             </button>
           </div>
         </div>
+        <div className="button-container button-container-size-l">
+          <button className="button button-size-l" onClick={handleSaveCV}>
+            Save
+          </button>
+        </div> */}
       </div>
     </div>
   );

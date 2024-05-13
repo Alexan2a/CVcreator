@@ -1,9 +1,9 @@
 import "./Main.css";
 import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Sort from "../../components/Sort/Sort";
 import SideBar from "../../components/SideBar/SideBar";
-import CVList from "../../components/CVList/CVList";
+import CVList from "../../components/CV/CVList";
 import useInputValue from "../../hooks/use-input-value";
 import { useCallback } from "react";
 import { useSelector } from "react-redux";
@@ -12,10 +12,13 @@ function Main() {
   const [name, , handleSetName] = useInputValue("");
   const [debouncedName, setDebouncedName] = useState("");
   const [opacity, setOpacity] = useState("");
-  const [activeSort, setActiveSort] = useState(() => (a, b) => b.date - a.date);
+  const [activeSort, setActiveSort] = useState(
+    () => (a, b) => Date.parse(a.date) - Date.parse(b.date)
+  );
   const handleSetActiveSort = useCallback((value) => setActiveSort(value), []);
 
   const username = useSelector((store) => store.username);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setOpacity(1);
@@ -37,6 +40,10 @@ function Main() {
     const id = setTimeout(() => setDebouncedName(name), 300);
     return () => clearTimeout(id);
   }, [name]);
+
+  const handleAddCV = () => {
+    navigate("/main/redactor/new");
+  };
 
   if (!username) {
     return <Navigate to="/" />;
@@ -66,7 +73,9 @@ function Main() {
               onChange={handleSetName}
             />
             <div className="sort-items">
-              <button className="button button-size-s">+ add new</button>
+              <button className="button button-size-s" onClick={handleAddCV}>
+                + add new
+              </button>
               <Sort
                 activeSort={activeSort}
                 onSetActiveSort={handleSetActiveSort}

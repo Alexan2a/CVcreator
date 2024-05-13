@@ -20,7 +20,16 @@ const router = createBrowserRouter([
   },
   {
     path: "/main/redactor",
-    element: <Redactor />,
+    children: [
+      {
+        path: "new",
+        element: <Redactor isNew={true} />,
+      },
+      {
+        path: ":id",
+        element: <Redactor isNew={false} />,
+      },
+    ],
   },
 ]);
 

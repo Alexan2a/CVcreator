@@ -151,6 +151,12 @@
   width: 10%;
   height: 100%;
 }
+.button-container-size-s {
+  width: 10%;
+}
+.button-container-size-l {
+  width: 30%;
+}
 
 .button-form-round {
   width: 4vh;
