@@ -72,6 +72,12 @@ function reducer(state, action) {
 function LogInForm({ loginError, onSetLoginError, onLogIn }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const passwordError = useMemo(() => {
+    console.log("a");
+    if (loginError) return "Incorrect login or password";
+    else return state.passwordState ? "Your password has incorrect length" : "";
+  }, [state.passwordState, loginError]);
+
   useEffect(() => {
     if (loginError) {
       let inputFields = document.querySelectorAll(".input-field");
@@ -79,7 +85,6 @@ function LogInForm({ loginError, onSetLoginError, onLogIn }) {
         field.style.borderColor = "red";
       });
       dispatch({ type: "LOGIN_FAIL" });
-      onSetLoginError(false);
     }
   }, [loginError, onSetLoginError]);
 
@@ -107,17 +112,20 @@ function LogInForm({ loginError, onSetLoginError, onLogIn }) {
   }, [state.password, state.hasPasswordChanged]);
 
   const handleSetUsername = (e) => {
+    if (loginError) onSetLoginError(false);
     dispatch({ type: "SET_USERNAME", payload: e.target.value });
   };
 
   const handleSetPassword = (e) => {
+    if (loginError) onSetLoginError(false);
     dispatch({ type: "SET_PASSWORD", payload: e.target.value });
   };
 
-  const passwordError = useMemo(() => {
-    if (loginError) return "Incorrect login or password";
-    else return state.passwordState ? "Your password has incorrect length" : "";
-  }, [state.passwordState, loginError]);
+  // const passwordError = useMemo(() => {
+  //   console.log("a");
+  //   if (loginError) return "Incorrect login or password";
+  //   else return state.passwordState ? "Your password has incorrect length" : "";
+  // }, [state.passwordState, loginError]);
 
   const usernameError = useMemo(
     () => (state.usernameState ? "Your login has incorrect form" : ""),

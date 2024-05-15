@@ -41,6 +41,7 @@ function reducer(state = initialState, action) {
 function Redactor({ isNew }) {
   let { id } = useParams();
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const [educations, setEducations] = useState([]);
   const [experiences, setExperiences] = useState([]);
@@ -50,7 +51,7 @@ function Redactor({ isNew }) {
 
   useEffect(() => {
     if (!isNew) {
-      console.log(id);
+      setIsLoading(true);
       fetch("http://localhost:8080/testproject_war_exploded/api/controller", {
         method: "GET",
         headers: {
@@ -75,6 +76,7 @@ function Redactor({ isNew }) {
           console.log(data.resume.educations);
           console.log(data.resume.experiences);
           console.log(data.resume.about);
+          setIsLoading(false);
         })
         .catch((error) => console.error("Ошибка:", error));
     } else {
@@ -149,7 +151,7 @@ function Redactor({ isNew }) {
   }
   const handleAddEducation = () => {
     const educ = {
-      id: +Date.now() + educations.length,
+      id: 0,
       degree: "",
       name: "",
       city: "",
@@ -161,7 +163,7 @@ function Redactor({ isNew }) {
 
   const handleAddExperience = () => {
     const exp = {
-      id: +Date.now() + educations.length,
+      id: 0,
       position: "",
       company: "",
       city: "",
@@ -173,7 +175,7 @@ function Redactor({ isNew }) {
 
   const handleAddSkill = () => {
     const skill = {
-      id: +Date.now() + educations.length,
+      id: 0,
       name: "",
       level: 50,
     };
@@ -184,63 +186,72 @@ function Redactor({ isNew }) {
     <div className="redactor">
       <div className="overlay overlay-side-left">
         <div className="redactor-fields">
-          <PersonalData
-            name={state.name}
-            surname={state.surname}
-            email={state.email}
-            title={state.title}
-            phone={state.phone}
-            adress={state.adress}
-            about={state.about}
-            onSetValue={dispatch}
-          />
-          <EducationList
-            educations={educations}
-            onSetEducations={setEducations}
-          />
-          <div className="redactor-fields__item">
-            <div className="redactor-fields__item-title">Education</div>
-            <div className="button-container button-container-size-s">
-              <button
-                className="button button-form-round"
-                onClick={handleAddEducation}
-              >
-                +
-              </button>
+          {isLoading && (
+            <div className="loading">
+              <img src="./src-img/load.gif" alt="Loading..." />
             </div>
-          </div>
-          <ExperienceList
-            experiences={experiences}
-            onSetExperiences={setExperiences}
-          />
-          <div className="redactor-fields__item">
-            <div className="redactor-fields__item-title">Experience</div>
-            <div className="button-container button-container-size-s">
-              <button
-                className="button button-form-round"
-                onClick={handleAddExperience}
-              >
-                +
-              </button>
+          )}
+          {!isLoading && (
+            <div>
+              <PersonalData
+                name={state.name}
+                surname={state.surname}
+                email={state.email}
+                title={state.title}
+                phone={state.phone}
+                adress={state.adress}
+                about={state.about}
+                onSetValue={dispatch}
+              />
+              <EducationList
+                educations={educations}
+                onSetEducations={setEducations}
+              />
+              <div className="redactor-fields__item">
+                <div className="redactor-fields__item-title">Education</div>
+                <div className="button-container button-container-size-s">
+                  <button
+                    className="button button-form-round"
+                    onClick={handleAddEducation}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <ExperienceList
+                experiences={experiences}
+                onSetExperiences={setExperiences}
+              />
+              <div className="redactor-fields__item">
+                <div className="redactor-fields__item-title">Experience</div>
+                <div className="button-container button-container-size-s">
+                  <button
+                    className="button button-form-round"
+                    onClick={handleAddExperience}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <SkillList skills={skills} onSetSkills={setSkills} />
+              <div className="redactor-fields__item">
+                <div className="redactor-fields__item-title">Skill</div>
+                <div className="button-container button-container-size-s">
+                  <button
+                    className="button button-form-round"
+                    onClick={handleAddSkill}
+                  >
+                    +
+                  </button>
+                </div>
+              </div>
+              <div className="button-container button-container-size-l">
+                <button className="button button-size-l" onClick={handleSaveCV}>
+                  Save
+                </button>
+              </div>
             </div>
-          </div>
-          <SkillList skills={skills} onSetSkills={setSkills} />
-          <div className="redactor-fields__item">
-            <div className="redactor-fields__item-title">Skill</div>
-            <div className="button-container button-container-size-s">
-              <button
-                className="button button-form-round"
-                onClick={handleAddSkill}
-              >
-                +
-              </button>
-            </div>
-          </div>
-          <div className="button-container button-container-size-l">
-            <button className="button button-size-l" onClick={handleSaveCV}>
-              Save
-            </button>
-          </div>
+          )}
         </div>
       </div>
     </div>

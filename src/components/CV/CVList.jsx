@@ -1,5 +1,4 @@
 import "./CV.css";
-import { generateCVs } from "../../utils/generateCVs";
 import { useEffect, useMemo, useState } from "react";
 import CVItem from "./CVItem";
 

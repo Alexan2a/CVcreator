@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import "./Download.css";
 import { Navigate, useParams } from "react-router-dom";
 import html2pdf from "html2pdf.js";
-import Template1 from "./Template1";
-import Template2 from "./Template2";
+import Template1 from "../../components/Templates/Template1";
+import Template2 from "../../components/Templates/Template2";
 import { useSelector } from "react-redux";
 
 function Download() {
@@ -30,17 +30,16 @@ function Download() {
 
   useEffect(() => {
     let templates = document.querySelectorAll(".template-border");
-    templates.forEach(
-      (item, index) => {
-        if (index === activeBtn) {
-          item.style.display = "none";
-        } else {
-          item.style.display = "block";
-        }
-      },
-      [activeBtn]
-    );
+    templates.forEach((item, index) => {
+      if (index === activeBtn) {
+        item.style.display = "none";
+      } else {
+        item.style.display = "block";
+      }
+    });
+  }, [activeBtn]);
 
+  useEffect(() => {
     console.log(id);
     fetch("http://localhost:8080/testproject_war_exploded/api/controller", {
       method: "GET",
