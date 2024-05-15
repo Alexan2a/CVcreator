@@ -1,9 +1,8 @@
 import "./Registration.css";
-import { useContext, useEffect, useMemo, useReducer } from "react";
-import { UserContext } from "../../components/UserContextProvider";
+import { useEffect, useMemo, useReducer } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import { PASSWORD_LENGTH, PASSWORD_VALID_SYMB } from "../../constants/form";
-import { useDispatch } from "react-redux";
+import { PASSWORD_LENGTH, USERNAME_VALID_SYMB } from "../../constants/form";
+import { useDispatch, useSelector } from "react-redux";
 
 const initialState = {
   username: "",
@@ -25,7 +24,7 @@ function reducer(state = initialState, action) {
     case "CHECK_USERNAME":
       if (
         (state.username.trim() === "" ||
-          !PASSWORD_VALID_SYMB.test(state.username)) &&
+          !USERNAME_VALID_SYMB.test(state.username)) &&
         state.hasUsernameChanged
       )
         return !state.usernameState
@@ -107,7 +106,7 @@ function Registartion() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const dispatchRedux = useDispatch();
   const navigate = useNavigate();
-  const { user } = useContext(UserContext);
+  const username = useSelector((store) => store.username);
 
   useEffect(() => {
     if (!state.hasUsernameChanged && state.username !== "") {
@@ -201,7 +200,7 @@ function Registartion() {
     }
   };
 
-  if (user) {
+  if (username) {
     return <Navigate to="/main" />;
   }
   return (

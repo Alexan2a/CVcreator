@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 function LogIn() {
   const navigate = useNavigate();
-  // const { user } = useContext(UserContext);
   const username = useSelector((store) => store.username);
   const dispatchRedux = useDispatch();
   const [loginError, setLoginError] = useState(false);
@@ -44,7 +43,6 @@ function LogIn() {
       .then((response) => response.json())
       .then((data) => {
         if (data.message === "User authenticated") {
-          console.log("logged in");
           localStorage.setItem("token", data.token);
           dispatchRedux({ type: "SET_USERNAME", payload: login });
           navigate("/main");

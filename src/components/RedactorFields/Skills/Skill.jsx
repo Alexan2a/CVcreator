@@ -21,7 +21,6 @@ function Skill({ id, name, level, onDelete, onSetValue }) {
       </div>
       <div className="data-field">
         <div className="data-field__input-container">
-          {/* Position */}
           <input
             type="text"
             placeholder="Skill"

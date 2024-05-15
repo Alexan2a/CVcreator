@@ -19,7 +19,6 @@ function EducationList({ educations, onSetEducations }) {
         )
       );
     },
-
     [onSetEducations]
   );
 
@@ -33,7 +32,7 @@ function EducationList({ educations, onSetEducations }) {
               degree={item.degree}
               name={item.name}
               city={item.city}
-              starYear={item.startYear}
+              startYear={item.startYear}
               endYear={item.endYear}
               onSetValue={handleSetValue}
               onDelete={handleDeleteEducation}

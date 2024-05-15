@@ -19,7 +19,6 @@ function ExperienceList({ experiences, onSetExperiences }) {
         )
       );
     },
-
     [onSetExperiences]
   );
 
@@ -33,7 +32,7 @@ function ExperienceList({ experiences, onSetExperiences }) {
               position={item.position}
               company={item.company}
               city={item.city}
-              starDater={item.startDate}
+              startDate={item.startDate}
               endDate={item.endDate}
               onSetValue={handleSetValue}
               onDelete={handleDelete}

@@ -4,6 +4,7 @@ import Main from "./pages/Main/Main";
 import LogIn from "./pages/Login/Login";
 import Registration from "./pages/Registration/Registration";
 import Redactor from "./pages/Redactor/Redactor";
+import Download from "./pages/Download/Download";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
         element: <Redactor isNew={false} />,
       },
     ],
+  },
+  {
+    path: "/main/download/:id",
+    element: <Download />,
   },
 ]);
 

@@ -4,7 +4,8 @@ import "./Redactor.css";
 import EducationList from "../../components/RedactorFields/Education/EducationList";
 import ExperienceList from "../../components/RedactorFields/Experience/ExperienceList";
 import SkillList from "../../components/RedactorFields/Skills/SkillList";
-import { useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const initialState = {
   name: "",
@@ -39,40 +40,113 @@ function reducer(state = initialState, action) {
 
 function Redactor({ isNew }) {
   let { id } = useParams();
+  const navigate = useNavigate();
   const [state, dispatch] = useReducer(reducer, initialState);
   const [educations, setEducations] = useState([]);
   const [experiences, setExperiences] = useState([]);
   const [skills, setSkills] = useState([]);
 
+  const username = useSelector((store) => store.username);
+
   useEffect(() => {
     if (!isNew) {
-      // Загрузите данные элемента с этим ID
-      // Это просто пример, вам нужно будет заменить его на ваш код для загрузки данных
-      // fetch(`/api/items/${id}`)
-      //   .then((response) => response.json())
-      //   .then((data) => setItem(data))
-      //   .catch((error) => console.error("Ошибка:", error));
-      console.log("Я старый");
+      console.log(id);
+      fetch("http://localhost:8080/testproject_war_exploded/api/controller", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          Command: "LOAD_RESUME",
+          ResumeId: id,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          dispatch({ type: "SET_NAME", payload: data.resume.name });
+          dispatch({ type: "SET_SURNAME", payload: data.resume.surname });
+          dispatch({ type: "SET_EMAIL", payload: data.resume.email });
+          dispatch({ type: "SET_TITLE", payload: data.resume.title });
+          dispatch({ type: "SET_PHONE", payload: data.resume.phone });
+          dispatch({ type: "SET_ADRESS", payload: data.resume.adress });
+          dispatch({ type: "SET_ABOUT", payload: data.resume.about });
+          setEducations(data.educations);
+          setExperiences(data.experiences);
+          setSkills(data.skills);
+          console.log(data.resume.educations);
+          console.log(data.resume.experiences);
+          console.log(data.resume.about);
+        })
+        .catch((error) => console.error("Ошибка:", error));
     } else {
-      // Это новый элемент, инициализируйте страницу для создания нового элемента
-      //setItem({
-
-      // Здесь вы можете установить начальные значения для нового элемента
-      //});
       console.log("Я новый");
     }
   }, [id, isNew]);
 
   const handleSaveCV = () => {
+    let d = new Date();
+    let formattedDate = d.toISOString().split("T")[0];
+    console.log(formattedDate);
+    console.log(state);
+    console.log(educations);
+    console.log(skills);
+    console.log(experiences);
     if (!isNew) {
-      //Тут обновляем резюме
-      console.log("Я старый");
+      fetch("http://localhost:8080/testproject_war_exploded/api/controller", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          ResumeId: id,
+        },
+        body: JSON.stringify({
+          command: "UPDATE_RESUME",
+          ...state,
+          date: formattedDate,
+          experiences,
+          educations,
+          skills,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          navigate("/main");
+          console.log(data);
+        })
+        .catch((error) => {
+          alert("Something went wrong");
+          console.error("Ошибка:", error);
+        });
     } else {
-      // тут добавляем резюме
-      console.log("Я новый");
+      fetch("http://localhost:8080/testproject_war_exploded/api/controller", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({
+          command: "SAVE_RESUME",
+          ...state,
+          date: formattedDate,
+          experiences,
+          educations,
+          skills,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          navigate("/main");
+          console.log(data);
+        })
+        .catch((error) => {
+          alert("Something went wrong");
+          console.error("Ошибка:", error);
+        });
     }
   };
 
+  if (!username) {
+    return <Navigate to="/" />;
+  }
   const handleAddEducation = () => {
     const educ = {
       id: +Date.now() + educations.length,
@@ -117,6 +191,7 @@ function Redactor({ isNew }) {
             title={state.title}
             phone={state.phone}
             adress={state.adress}
+            about={state.about}
             onSetValue={dispatch}
           />
           <EducationList

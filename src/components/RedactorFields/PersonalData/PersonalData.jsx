@@ -1,5 +1,3 @@
-// import "./Login.css";
-
 import React from "react";
 
 function PersonalData({

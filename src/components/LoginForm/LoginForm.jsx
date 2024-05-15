@@ -1,6 +1,6 @@
 import "./LoginForm.css";
 import { useEffect, useMemo, useReducer } from "react";
-import { PASSWORD_LENGTH, PASSWORD_VALID_SYMB } from "../../constants/form";
+import { PASSWORD_LENGTH, USERNAME_VALID_SYMB } from "../../constants/form";
 import { Link } from "react-router-dom";
 
 const initialState = {
@@ -19,7 +19,7 @@ function reducer(state, action) {
     case "CHECK_USERNAME":
       if (
         (state.username.trim() === "" ||
-          !PASSWORD_VALID_SYMB.test(state.username)) &&
+          !USERNAME_VALID_SYMB.test(state.username)) &&
         state.hasUsernameChanged
       )
         return !state.usernameState

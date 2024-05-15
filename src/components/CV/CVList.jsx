@@ -19,6 +19,7 @@ function CVList({ name, activeSort }) {
       .then((response) => response.json())
       .then((data) => {
         setItems(data);
+        console.log(data);
         setIsLoading(false);
       })
       .catch((error) => {
@@ -29,7 +30,7 @@ function CVList({ name, activeSort }) {
 
   const searchItems = useMemo(() => {
     return items.filter((item) =>
-      item.name.toLowerCase().includes(name.toLowerCase())
+      item.title.toLowerCase().includes(name.toLowerCase())
     );
   }, [name, items]);
 
@@ -38,7 +39,7 @@ function CVList({ name, activeSort }) {
   }, [activeSort, searchItems]);
 
   return (
-    <div className="cv-list">
+    <div className="items-list">
       {isLoading && (
         <div className="loading">
           <img src="./src-img/load.gif" alt="Loading..." />
@@ -46,7 +47,9 @@ function CVList({ name, activeSort }) {
       )}
       {!isLoading &&
         !!itemsToDisplay.length &&
-        itemsToDisplay.map((item) => <CVItem key={item.id} {...item} />)}
+        itemsToDisplay.map((item) => (
+          <CVItem key={item.resumeId} id={item.resumeId} {...item} />
+        ))}
       {!isLoading && !itemsToDisplay.length && (
         <span className="nothing-found">Nothing is found...</span>
       )}
