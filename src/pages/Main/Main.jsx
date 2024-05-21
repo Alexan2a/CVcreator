@@ -6,7 +6,7 @@ import SideBar from "../../components/SideBar/SideBar";
 import CVList from "../../components/CV/CVList";
 import useInputValue from "../../hooks/use-input-value";
 import { useCallback } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function Main() {
   const [name, , handleSetName] = useInputValue("");
@@ -17,23 +17,34 @@ function Main() {
   );
   const handleSetActiveSort = useCallback((value) => setActiveSort(value), []);
 
+  const dispatch = useDispatch();
   const username = useSelector((store) => store.username);
+  const hasLoggedIn = useSelector((store) => store.hasLoggedIn);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setOpacity(1);
-    document.body.style.overflow = "hidden";
-    document.body.style.height = "100vh";
-    setTimeout(() => {
-      setOpacity(0);
-    }, 2000);
-    setTimeout(() => {
+    if (!hasLoggedIn) {
+      setOpacity(1);
+      document.body.style.overflow = "hidden";
+      document.body.style.height = "100vh";
+      dispatch({ type: "SET_LOGGED_IN" });
+      setTimeout(() => {
+        setOpacity(0);
+      }, 2000);
+      setTimeout(() => {
+        try {
+          document.querySelector(".welcome").style.display = "none";
+          document.body.style.overflow = "auto";
+          document.body.style.height = "auto";
+        } catch {}
+      }, 3000);
+    } else {
       try {
         document.querySelector(".welcome").style.display = "none";
         document.body.style.overflow = "auto";
         document.body.style.height = "auto";
       } catch {}
-    }, 3000);
+    }
   }, []);
 
   useEffect(() => {
@@ -60,7 +71,13 @@ function Main() {
       <div className="main-item">
         <div className="header">
           <div className="overlay">
-            <img className="logo-img" src="" alt="CVCreator" />
+            <div className="logo-container">
+              <img
+                className="logo-img"
+                src="./src-img/logo.png"
+                alt="CVCreator"
+              />
+            </div>
           </div>
         </div>
         <div className="option">

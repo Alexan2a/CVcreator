@@ -28,33 +28,33 @@ function LogIn() {
     }
   };
 
-  // const handleLogIn = (login, pass) => {
-  //   fetch("http://localhost:8080/testproject_war_exploded/api/controller", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       command: "LOGIN",
-  //       username: login,
-  //       pass: pass,
-  //     }),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       if (data.message === "User authenticated") {
-  //         localStorage.setItem("token", data.token);
-  //         dispatchRedux({ type: "SET_USERNAME", payload: login });
-  //         navigate("/main");
-  //       } else {
-  //         console.error(data);
-  //       }
+  //   const handleLogIn = (login, pass) => {
+  //     fetch("http://localhost:8080/testproject_war_exploded/api/controller", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         command: "LOGIN",
+  //         username: login,
+  //         pass: pass,
+  //       }),
   //     })
-  //     .catch((error) => {
-  //       setLoginError(true);
-  //       console.error("Ошибка при входе", error);
-  //     });
-  // };
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         if (data.message === "User authenticated") {
+  //           localStorage.setItem("token", data.token);
+  //           dispatchRedux({ type: "SET_USERNAME", payload: login });
+  //           navigate("/main");
+  //         } else {
+  //           console.error(data);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         setLoginError(true);
+  //         console.error("Ошибка при входе", error);
+  //       });
+  //   };
 
   if (username) {
     return <Navigate to="/main" />;

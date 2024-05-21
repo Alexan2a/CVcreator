@@ -5,7 +5,7 @@ function SkillList({ skills, onSetSkills }) {
   const handleDelete = useCallback(
     (id) => {
       onSetSkills((currentSkills) =>
-        currentSkills.filter((skill) => skill.id !== id)
+        currentSkills.filter((skill) => skill.skillId !== id)
       );
     },
     [onSetSkills]
@@ -15,7 +15,7 @@ function SkillList({ skills, onSetSkills }) {
     (property, value, id) => {
       onSetSkills((currentSkills) =>
         currentSkills.map((skill) =>
-          skill.id === id ? { ...skill, [property]: value } : skill
+          skill.skillId === id ? { ...skill, [property]: value } : skill
         )
       );
     },
@@ -29,7 +29,8 @@ function SkillList({ skills, onSetSkills }) {
         ? skills.map((item) => (
             <Skill
               key={item.id}
-              id={item.id}
+              isNew={item.isNew}
+              id={item.skillId}
               name={item.name}
               level={item.level}
               onSetValue={handleSetValue}

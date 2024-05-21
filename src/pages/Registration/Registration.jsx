@@ -206,7 +206,7 @@ function Registartion() {
   return (
     <div className="registartion">
       <div className="registration__form">
-        <p className="title">Registration</p>
+        <p className="title-form">Registration</p>
         <input
           type="text"
           className="input-field"

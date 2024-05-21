@@ -33,13 +33,14 @@ function Slider() {
             className="slide-background"
             style={{
               backgroundImage: `url(${slide.imgURL})`,
-              filter: "blur(2px)",
             }}
           />
           <div className="overlay overlay-slider">{slide.text}</div>
         </div>
       ))}
-      <div className="logo-container"></div>
+      <div className="logo-container">
+        <img className="logo-img" src="./src-img/logo.png" alt="CVCreator" />
+      </div>
       <div className="circles">
         {SLIDES.map((slide, index) => (
           <div

@@ -4,20 +4,23 @@ import { Navigate, useParams } from "react-router-dom";
 import html2pdf from "html2pdf.js";
 import Template1 from "../../components/Templates/Template1";
 import Template2 from "../../components/Templates/Template2";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 function Download() {
   let { id } = useParams();
+  const dispatchRedux = useDispatch();
   const username = useSelector((store) => store.username);
   const [activeBtn, setActiveBtn] = useState(0);
   const [state, setState] = useState({
-    name: "",
-    surname: "",
-    email: "",
-    title: "",
-    phone: "",
-    adress: "",
-    about: "",
+    resume: {
+      name: "",
+      surname: "",
+      email: "",
+      title: "",
+      phone: "",
+      adress: "",
+      about: "",
+    },
     educations: [],
     experiences: [],
     skills: [],
@@ -32,9 +35,9 @@ function Download() {
     let templates = document.querySelectorAll(".template-border");
     templates.forEach((item, index) => {
       if (index === activeBtn) {
-        item.style.display = "none";
-      } else {
         item.style.display = "block";
+      } else {
+        item.style.display = "none";
       }
     });
   }, [activeBtn]);
@@ -46,17 +49,21 @@ function Download() {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
         Command: "LOAD_RESUME",
-        ResumeId: id, // передайте id резюме, которое нужно загрузить
+        ResumeId: id,
       },
     })
       .then((response) => response.json())
       .then((data) => {
-        // Здесь вы можете установить данные резюме в вашем состоянии
-        console.log(data);
+        if (data === "Invalid token") {
+          dispatchRedux({ type: "DELETE_USERNAME" });
+          alert(`Time of session is over. Please, repeat log in`);
+          localStorage.removeItem("token");
+          localStorage.removeItem("username");
+        }
         setState(data);
       })
       .catch((error) => console.error("Ошибка:", error));
-  }, [id]);
+  }, [id, dispatchRedux]);
 
   const handleDownload = () => {
     let element = document.querySelectorAll(".template")[activeBtn];
@@ -76,19 +83,13 @@ function Download() {
               key={index}
               className={
                 activeBtn === index
-                  ? "side-bar__option side-bar__option-type-template side-bar__option-active"
-                  : "side-bar__option side-bar__option-type-template"
+                  ? `side-bar__option side-bar__option-type-template temp${index} side-bar__option-active`
+                  : `side-bar__option side-bar__option-type-template temp${index}`
               }
               onClick={() => {
                 setActiveBtn(index);
               }}
-            >
-              <img
-                className="side-bar__user-image"
-                src="./img/img1.jpg"
-                alt={"username"}
-              />
-            </div>
+            ></div>
           ))}
         </div>
 

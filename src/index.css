@@ -4,6 +4,6 @@
   box-sizing: border-box;
 }
 
-/* ::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 0;
-} */
+}

@@ -5,7 +5,7 @@ function EducationList({ educations, onSetEducations }) {
   const handleDeleteEducation = useCallback(
     (id) => {
       onSetEducations((currentEducations) =>
-        currentEducations.filter((ed) => ed.id !== id)
+        currentEducations.filter((ed) => ed.educationId !== id)
       );
     },
     [onSetEducations]
@@ -15,7 +15,7 @@ function EducationList({ educations, onSetEducations }) {
     (property, value, id) => {
       onSetEducations((currentEducations) =>
         currentEducations.map((ed) =>
-          ed.id === id ? { ...ed, [property]: value } : ed
+          ed.educationId === id ? { ...ed, [property]: value } : ed
         )
       );
     },
@@ -28,7 +28,8 @@ function EducationList({ educations, onSetEducations }) {
         ? educations.map((item, index) => (
             <Education
               key={index}
-              id={item.id}
+              id={item.educationId}
+              isNew={item.isNew}
               degree={item.degree}
               name={item.name}
               city={item.city}

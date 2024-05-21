@@ -5,8 +5,8 @@ export function generateCVs(n) {
   for (let i = 0; i < n; i++) {
     let item = {
       id: chance.guid(),
-      date: chance.date(),
-      name: chance.word(),
+      date: chance.date().toLocaleDateString(),
+      title: chance.word(),
     };
     cvs.push(item);
   }

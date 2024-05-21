@@ -10,12 +10,17 @@ function PersonalData({
   about,
   onSetValue,
 }) {
-  console.log("Personal data");
   return (
     <div className="data-field">
       <div className="redactor-fields__item-title top">Personal data</div>
       <div className="data-field-top">
-        <div className="data-field__photo"></div>
+        <div className="data-field__photo">
+          <img
+            className="data-field__photo-img"
+            src="./src-img/upload.jpg"
+            alt="userphoto"
+          />
+        </div>
         <div className="data-field__inf">
           <div className="data-field__name">
             <div className="data-field__input-container">

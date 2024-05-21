@@ -5,7 +5,7 @@ import EducationList from "../../components/RedactorFields/Education/EducationLi
 import ExperienceList from "../../components/RedactorFields/Experience/ExperienceList";
 import SkillList from "../../components/RedactorFields/Skills/SkillList";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const initialState = {
   name: "",
@@ -41,17 +41,16 @@ function reducer(state = initialState, action) {
 function Redactor({ isNew }) {
   let { id } = useParams();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
   const [state, dispatch] = useReducer(reducer, initialState);
   const [educations, setEducations] = useState([]);
   const [experiences, setExperiences] = useState([]);
   const [skills, setSkills] = useState([]);
 
+  const dispatchRedux = useDispatch();
   const username = useSelector((store) => store.username);
 
   useEffect(() => {
     if (!isNew) {
-      setIsLoading(true);
       fetch("http://localhost:8080/testproject_war_exploded/api/controller", {
         method: "GET",
         headers: {
@@ -62,7 +61,12 @@ function Redactor({ isNew }) {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+          if (data === "Invalid token") {
+            dispatchRedux({ type: "DELETE_USERNAME" });
+            alert(`Time of session is over. Please, repeat log in`);
+            localStorage.removeItem("token");
+            localStorage.removeItem("username");
+          }
           dispatch({ type: "SET_NAME", payload: data.resume.name });
           dispatch({ type: "SET_SURNAME", payload: data.resume.surname });
           dispatch({ type: "SET_EMAIL", payload: data.resume.email });
@@ -73,25 +77,14 @@ function Redactor({ isNew }) {
           setEducations(data.educations);
           setExperiences(data.experiences);
           setSkills(data.skills);
-          console.log(data.resume.educations);
-          console.log(data.resume.experiences);
-          console.log(data.resume.about);
-          setIsLoading(false);
         })
         .catch((error) => console.error("Ошибка:", error));
-    } else {
-      console.log("Я новый");
     }
-  }, [id, isNew]);
+  }, [id, isNew, dispatchRedux]);
 
   const handleSaveCV = () => {
     let d = new Date();
     let formattedDate = d.toISOString().split("T")[0];
-    console.log(formattedDate);
-    console.log(state);
-    console.log(educations);
-    console.log(skills);
-    console.log(experiences);
     if (!isNew) {
       fetch("http://localhost:8080/testproject_war_exploded/api/controller", {
         method: "POST",
@@ -111,8 +104,13 @@ function Redactor({ isNew }) {
       })
         .then((response) => response.json())
         .then((data) => {
+          if (data === "Invalid token") {
+            dispatchRedux({ type: "DELETE_USERNAME" });
+            alert(`Time of session is over. Please, repeat log in`);
+            localStorage.removeItem("token");
+            localStorage.removeItem("username");
+          }
           navigate("/main");
-          console.log(data);
         })
         .catch((error) => {
           alert("Something went wrong");
@@ -136,8 +134,13 @@ function Redactor({ isNew }) {
       })
         .then((response) => response.json())
         .then((data) => {
+          if (data === "Invalid token") {
+            dispatchRedux({ type: "DELETE_USERNAME" });
+            alert(`Time of session is over. Please, repeat log in`);
+            localStorage.removeItem("token");
+            localStorage.removeItem("username");
+          }
           navigate("/main");
-          console.log(data);
         })
         .catch((error) => {
           alert("Something went wrong");
@@ -151,7 +154,8 @@ function Redactor({ isNew }) {
   }
   const handleAddEducation = () => {
     const educ = {
-      id: 0,
+      educationId: +Date.now() + 123,
+      isNew: true,
       degree: "",
       name: "",
       city: "",
@@ -163,7 +167,8 @@ function Redactor({ isNew }) {
 
   const handleAddExperience = () => {
     const exp = {
-      id: 0,
+      experienceId: +Date.now(),
+      isNew: true,
       position: "",
       company: "",
       city: "",
@@ -175,7 +180,8 @@ function Redactor({ isNew }) {
 
   const handleAddSkill = () => {
     const skill = {
-      id: 0,
+      skillId: +Date.now() + educations.length + 45642325,
+      isNew: true,
       name: "",
       level: 50,
     };
@@ -186,72 +192,63 @@ function Redactor({ isNew }) {
     <div className="redactor">
       <div className="overlay overlay-side-left">
         <div className="redactor-fields">
-          {isLoading && (
-            <div className="loading">
-              <img src="./src-img/load.gif" alt="Loading..." />
+          <PersonalData
+            name={state.name}
+            surname={state.surname}
+            email={state.email}
+            title={state.title}
+            phone={state.phone}
+            adress={state.adress}
+            about={state.about}
+            onSetValue={dispatch}
+          />
+          <EducationList
+            educations={educations}
+            onSetEducations={setEducations}
+          />
+          <div className="redactor-fields__item">
+            <div className="redactor-fields__item-title">Education</div>
+            <div className="button-container button-container-size-s">
+              <button
+                className="button button-form-round"
+                onClick={handleAddEducation}
+              >
+                +
+              </button>
             </div>
-          )}
-          {!isLoading && (
-            <div>
-              <PersonalData
-                name={state.name}
-                surname={state.surname}
-                email={state.email}
-                title={state.title}
-                phone={state.phone}
-                adress={state.adress}
-                about={state.about}
-                onSetValue={dispatch}
-              />
-              <EducationList
-                educations={educations}
-                onSetEducations={setEducations}
-              />
-              <div className="redactor-fields__item">
-                <div className="redactor-fields__item-title">Education</div>
-                <div className="button-container button-container-size-s">
-                  <button
-                    className="button button-form-round"
-                    onClick={handleAddEducation}
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-              <ExperienceList
-                experiences={experiences}
-                onSetExperiences={setExperiences}
-              />
-              <div className="redactor-fields__item">
-                <div className="redactor-fields__item-title">Experience</div>
-                <div className="button-container button-container-size-s">
-                  <button
-                    className="button button-form-round"
-                    onClick={handleAddExperience}
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-              <SkillList skills={skills} onSetSkills={setSkills} />
-              <div className="redactor-fields__item">
-                <div className="redactor-fields__item-title">Skill</div>
-                <div className="button-container button-container-size-s">
-                  <button
-                    className="button button-form-round"
-                    onClick={handleAddSkill}
-                  >
-                    +
-                  </button>
-                </div>
-              </div>
-              <div className="button-container button-container-size-l">
-                <button className="button button-size-l" onClick={handleSaveCV}>
-                  Save
-                </button>
-              </div>
+          </div>
+          <ExperienceList
+            experiences={experiences}
+            onSetExperiences={setExperiences}
+          />
+          <div className="redactor-fields__item">
+            <div className="redactor-fields__item-title">Experience</div>
+            <div className="button-container button-container-size-s">
+              <button
+                className="button button-form-round"
+                onClick={handleAddExperience}
+              >
+                +
+              </button>
             </div>
-          )}
+          </div>
+          <SkillList skills={skills} onSetSkills={setSkills} />
+          <div className="redactor-fields__item">
+            <div className="redactor-fields__item-title">Skill</div>
+            <div className="button-container button-container-size-s">
+              <button
+                className="button button-form-round"
+                onClick={handleAddSkill}
+              >
+                +
+              </button>
+            </div>
+          </div>
+          <div className="button-container button-container-size-l">
+            <button className="button button-size-l" onClick={handleSaveCV}>
+              Save
+            </button>
+          </div>
         </div>
       </div>
     </div>

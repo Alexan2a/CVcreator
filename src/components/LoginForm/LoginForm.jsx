@@ -72,12 +72,6 @@ function reducer(state, action) {
 function LogInForm({ loginError, onSetLoginError, onLogIn }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const passwordError = useMemo(() => {
-    console.log("a");
-    if (loginError) return "Incorrect login or password";
-    else return state.passwordState ? "Your password has incorrect length" : "";
-  }, [state.passwordState, loginError]);
-
   useEffect(() => {
     if (loginError) {
       let inputFields = document.querySelectorAll(".input-field");
@@ -121,11 +115,10 @@ function LogInForm({ loginError, onSetLoginError, onLogIn }) {
     dispatch({ type: "SET_PASSWORD", payload: e.target.value });
   };
 
-  // const passwordError = useMemo(() => {
-  //   console.log("a");
-  //   if (loginError) return "Incorrect login or password";
-  //   else return state.passwordState ? "Your password has incorrect length" : "";
-  // }, [state.passwordState, loginError]);
+  const passwordError = useMemo(() => {
+    if (loginError) return "Incorrect login or password";
+    else return state.passwordState ? "Your password has incorrect length" : "";
+  }, [state.passwordState, loginError]);
 
   const usernameError = useMemo(
     () => (state.usernameState ? "Your login has incorrect form" : ""),
@@ -144,7 +137,7 @@ function LogInForm({ loginError, onSetLoginError, onLogIn }) {
 
   return (
     <div className="log-in-form">
-      <p className="title">log in</p>
+      <p className="title-form">log in</p>
       <input
         type="text"
         className="input-field"

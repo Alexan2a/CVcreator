@@ -15,10 +15,6 @@ function SideBar({ username }) {
       document.querySelector(".side-bar").style.width = "20%";
       document.querySelector(".main-item").style.width = "80%";
       document.querySelector(".side-bar__button").style.width = "10%";
-      //   let optionImage = document.querySelectorAll(".side-bar__option-image");
-      //   optionImage.forEach((image) => {
-      //     image.style.width = "20%";
-      //   });
     } else {
       let optionText = document.querySelectorAll(".side-bar__option-text");
       optionText.forEach((text) => {
@@ -27,10 +23,6 @@ function SideBar({ username }) {
       document.querySelector(".side-bar").style.width = "8%";
       document.querySelector(".main-item").style.width = "92%";
       document.querySelector(".side-bar__button").style.width = "30%";
-      //   let optionImage = document.querySelectorAll(".side-bar__option-image");
-      //   optionImage.forEach((image) => {
-      //     image.style.width = "100%";
-      //   });
     }
   }, [isOpen]);
 
@@ -89,7 +81,7 @@ function SideBar({ username }) {
         <div className="side-bar__option side-bar__option-user">
           <img
             className="side-bar__user-image"
-            src="./img/img1.jpg"
+            src="./src-img/user.png"
             alt={username}
           />
           <div className="side-bar__option-text side-bar__user-text">

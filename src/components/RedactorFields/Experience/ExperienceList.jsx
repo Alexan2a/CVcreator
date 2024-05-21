@@ -5,7 +5,7 @@ function ExperienceList({ experiences, onSetExperiences }) {
   const handleDelete = useCallback(
     (id) => {
       onSetExperiences((currentExperiences) =>
-        currentExperiences.filter((exp) => exp.id !== id)
+        currentExperiences.filter((exp) => exp.experienceId !== id)
       );
     },
     [onSetExperiences]
@@ -15,7 +15,7 @@ function ExperienceList({ experiences, onSetExperiences }) {
     (property, value, id) => {
       onSetExperiences((currentExperiences) =>
         currentExperiences.map((exp) =>
-          exp.id === id ? { ...exp, [property]: value } : exp
+          exp.experienceId === id ? { ...exp, [property]: value } : exp
         )
       );
     },
@@ -28,7 +28,8 @@ function ExperienceList({ experiences, onSetExperiences }) {
         ? experiences.map((item) => (
             <Experience
               key={item.id}
-              id={item.id}
+              id={item.experienceId}
+              isNew={item.isNew}
               position={item.position}
               company={item.company}
               city={item.city}
